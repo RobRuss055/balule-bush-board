@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bush Board Guide</title>
+<meta name="description" content="How to use the Balule Bush Board.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#ECEFE3; --surface:#FAFBF5; --surface-2:#F2F4EA; --ink:#1C251E; --muted:#5B685D; --line:#D3D9C8;
+  --accent:#C8641C; --accent-ink:#96460C; --accent-soft:#F6E2CF; --olive:#4F6B45; --olive-soft:#DCE6D2;
+  --sky:#4E8298; --sky-soft:#DDE9EC; --warn:#A5421B;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ground:#0F1511; --surface:#18201A; --surface-2:#1F2921; --ink:#E8ECE1; --muted:#9AA79A; --line:#2A352C;
+  --accent:#EE9646; --accent-ink:#F3AE6E; --accent-soft:#3A2A1A; --olive:#93B584; --olive-soft:#243322;
+  --sky:#86B6CA; --sky-soft:#1E2C30; --warn:#F08A62;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F1511; --surface:#18201A; --surface-2:#1F2921; --ink:#E8ECE1; --muted:#9AA79A; --line:#2A352C;
+  --accent:#EE9646; --accent-ink:#F3AE6E; --accent-soft:#3A2A1A; --olive:#93B584; --olive-soft:#243322;
+  --sky:#86B6CA; --sky-soft:#1E2C30; --warn:#F08A62;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased;margin:0;padding-inline:16px;padding-block:24px 48px}
+.wrap{max-width:560px;margin:0 auto}
+h1,h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.01em;margin:0}
+a{color:var(--accent-ink)}
+
+/* header */
+.eyebrow{font:700 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font:900 clamp(34px,10vw,46px)/.95;margin:6px 0 8px;text-wrap:balance}
+.lede{color:var(--muted);font-size:15px;max-width:46ch}
+.linkbox{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:16px}
+.linkbox svg{flex:none;width:20px;height:20px;color:var(--accent)}
+.linkbox .u{flex:1;min-width:0}
+.linkbox .l{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.linkbox a{display:block;font-weight:700;word-break:break-all;font-size:14.5px;text-decoration:none}
+.linkbox a:hover{text-decoration:underline}
+.linkbox button{flex:none;border:1.5px solid var(--line);background:var(--surface-2);border-radius:9px;padding:7px 12px;font:600 12.5px var(--body);color:var(--ink);cursor:pointer}
+.linkbox button:active{background:var(--olive-soft)}
+
+/* first-time strip */
+.first{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);border-radius:14px;padding:12px 14px;margin-top:14px;color:var(--ink)}
+.first svg{flex:none;width:20px;height:20px;margin-top:1px;color:var(--accent-ink)}
+.first b{display:block;font-size:13.5px;font-weight:700}
+.first span{font-size:13.5px;color:var(--ink);opacity:.85}
+
+/* steps */
+.steps{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.num{flex:none;width:34px;height:34px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font:800 16px/1 var(--display);color:var(--muted)}
+.step .body{flex:1;min-width:0}
+.step .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.step h2{font-size:19px}
+.tabicon{flex:none;width:22px;height:22px;color:var(--accent)}
+.step p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.step p b{color:var(--ink);font-weight:600}
+.step .eg{margin-top:8px;background:var(--surface-2);border-radius:10px;padding:8px 11px;font-size:13px;color:var(--muted)}
+.step .eg b{color:var(--ink)}
+.step .row2{display:flex;gap:8px;margin-top:8px}
+.chipdemo{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.chipdemo i{width:16px;height:16px;border-radius:5px;border:2px solid var(--line);display:inline-block}
+.chipdemo i.round{border-radius:50%}
+.chipdemo i.on{background:var(--olive);border-color:var(--olive)}
+
+/* tips */
+.tips{margin-top:28px}
+.tips h2{font-size:22px;margin-bottom:12px}
+.tip{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.tip:first-of-type{border-top:0}
+.tip svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--sky)}
+.tip.warn svg{color:var(--warn)}
+.tip p{margin:0;font-size:13.5px;color:var(--muted)}
+.tip p b{color:var(--ink);font-weight:600}
+
+footer{margin-top:32px;text-align:center;font-size:12.5px;color:var(--muted)}
+@media (max-width:360px){.step{padding:12px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Balule · 27 September</div>
+  <h1>Using the Bush Board</h1>
+  <p class="lede">One shared page for the shopping list, packing list and who's paid for what. No app, no login, no password: just open the link.</p>
+
+  <div class="linkbox">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+    <div class="u"><div class="l">The board</div><a href="https://robruss055.github.io/balule-bush-board/" target="_blank" rel="noopener">robruss055.github.io/balule-bush-board</a></div>
+    <button type="button" id="copy">Copy</button>
+  </div>
+
+  <div class="first">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+    <span><b>First time opening it:</b> if the shopping list looks empty, give it a few seconds to connect, then refresh the page once. After that it stays live and needs no more refreshing.</span>
+  </div>
+
+  <ol class="steps">
+    <li class="step">
+      <div class="num">1</div>
+      <div class="body">
+        <div class="head"><h2>Open it, pick your name</h2></div>
+        <p>Tap the link above. At the top of the page, tap <b>your name</b> — Cassy or Ashton. Do this once; the page remembers you.</p>
+        <p class="eg">Your name is how the board knows which ticks and payments are yours, so everyone's totals stay correct.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="num">2</div>
+      <div class="body">
+        <div class="head">
+          <svg class="tabicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <h2>Shop tab</h2>
+        </div>
+        <p>Grouped by store, so it's a route: Checkers, then Food Lover's, then Makro, then Hoedspruit for ice. <b>Tick an item when you buy it.</b> That records that you paid for it, at its listed price.</p>
+        <p class="eg"><b>Bought something for a different price, or not on the list?</b> Tap the item's name to correct the price or add who it's really for. To add something new, use the form at the bottom of the tab.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="num">3</div>
+      <div class="body">
+        <div class="head">
+          <svg class="tabicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1Z"/></svg>
+          <h2>Home tab</h2>
+        </div>
+        <p>Things we already have, so nobody buys them twice: coffee, spices, toilet roll, that sort of thing. Tick each one off once it's actually in the car.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="num">4</div>
+      <div class="body">
+        <div class="head">
+          <svg class="tabicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2.5"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M4 12h16"/></svg>
+          <h2>Pack tab</h2>
+        </div>
+        <p>What to pack, with the weather already worked in. Two kinds of item:</p>
+        <div class="row2">
+          <span class="chipdemo"><i class="round on"></i> for something personal, like a jacket — everyone ticks their own</span>
+        </div>
+        <div class="row2">
+          <span class="chipdemo"><i class="on"></i> for something shared, like the cooler box — one tick for the unit</span>
+        </div>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="num">5</div>
+      <div class="body">
+        <div class="head">
+          <svg class="tabicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/></svg>
+          <h2>Money tab</h2>
+        </div>
+        <p>Nothing to work out by hand. It shows what the whole trip costs, what each of us has paid, and <b>who owes who</b>, worked out automatically as items get ticked.</p>
+        <p class="eg">Paid for fuel, or something in cash that isn't on the Shop list? Use <b>Log a payment</b> on this tab: say what it was for, the amount, who paid, and who it's split between.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="num">6</div>
+      <div class="body">
+        <div class="head">
+          <svg class="tabicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.4-6-10.5a6 6 0 0 1 12 0C18 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.2"/></svg>
+          <h2>Trip tab</h2>
+        </div>
+        <p>Everything else in one place: expected weather, the route both ways, what Des is bringing, and what every unit is bringing.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="tips">
+    <h2>Worth knowing</h2>
+    <div class="tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.4-6-10.5a6 6 0 0 1 12 0C18 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.2"/></svg>
+      <p><b>It's live for all three of us.</b> The moment one of us ticks something, the others see it update — no need to say "I got the bread" in the group chat.</p>
+    </div>
+    <div class="tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M9 18h6"/></svg>
+      <p><b>Works on any phone, no install.</b> Bookmark the link or add it to your home screen so it's one tap away.</p>
+    </div>
+    <div class="tip warn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5M20 20v-5h-5"/><path d="M4.6 15a8 8 0 0 0 14.9 2M19.4 9a8 8 0 0 0-14.9-2"/></svg>
+      <p><b>Nothing loading?</b> Pull down or refresh the page once. This is only ever needed the very first time you open it on a device.</p>
+    </div>
+  </div>
+
+  <footer>Questions go to Rob. Everything on the board updates for everyone, straight away.</footer>
+</div>
+
+<script>
+document.getElementById('copy').addEventListener('click', async () => {
+  const btn = document.getElementById('copy');
+  const url = 'https://robruss055.github.io/balule-bush-board/';
+  try {
+    await navigator.clipboard.writeText(url);
+    btn.textContent = 'Copied';
+  } catch(e) {
+    const r = document.createRange();
+    const a = document.querySelector('.linkbox a');
+    r.selectNodeContents(a);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(r);
+    btn.textContent = 'Select & copy';
+  }
+  setTimeout(() => { btn.textContent = 'Copy'; }, 1600);
+});
+</script>
+
+</body>
+</html>
