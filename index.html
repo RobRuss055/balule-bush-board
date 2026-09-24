@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Balule Bush Board</title>
+<meta name="description" content="Live shared shopping, packing and budget board for the Balule trip.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#ECEFE3; --surface:#FAFBF5; --surface-2:#F2F4EA; --ink:#1C251E; --muted:#5B685D; --line:#D3D9C8;
+  --accent:#C8641C; --accent-ink:#96460C; --accent-soft:#F6E2CF; --olive:#4F6B45; --olive-soft:#DCE6D2;
+  --sky:#4E8298; --warn:#A5421B; --shadow:0 1px 2px rgba(28,37,30,.06),0 6px 18px rgba(28,37,30,.06);
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ground:#0F1511; --surface:#18201A; --surface-2:#1F2921; --ink:#E8ECE1; --muted:#9AA79A; --line:#2A352C;
+  --accent:#EE9646; --accent-ink:#F3AE6E; --accent-soft:#3A2A1A; --olive:#93B584; --olive-soft:#243322;
+  --sky:#86B6CA; --warn:#F08A62; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F1511; --surface:#18201A; --surface-2:#1F2921; --ink:#E8ECE1; --muted:#9AA79A; --line:#2A352C;
+  --accent:#EE9646; --accent-ink:#F3AE6E; --accent-soft:#3A2A1A; --olive:#93B584; --olive-soft:#243322;
+  --sky:#86B6CA; --warn:#F08A62; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:640px;margin:0 auto;padding-inline:16px}
+.num{font-variant-numeric:tabular-nums}
+
+/* hero */
+.hero{position:relative;overflow:hidden;color:#FFF6EA;background:#2A1A12}
+.hero svg.scene{display:block;width:100%;height:auto;max-width:100%}
+.hero .over{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-start;padding:18px 16px 0}
+.hero .over .wrap{width:100%;padding:0}
+.eyebrow{font:600 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.hero h1{font:900 clamp(40px,11vw,62px)/.9 var(--display);letter-spacing:.01em;margin:6px 0 4px;text-transform:uppercase;text-wrap:balance}
+.hero .sub{font-size:14px;opacity:.9}
+.count{display:inline-flex;align-items:baseline;gap:6px;margin-top:10px;background:rgba(20,12,8,.45);backdrop-filter:blur(4px);padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.count b{font:800 20px/1 var(--display)}
+
+/* weather strip */
+.wx{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:-22px;position:relative;box-shadow:var(--shadow)}
+.wx div{background:var(--surface);padding:10px 6px;text-align:center}
+.wx .t{font:800 22px/1 var(--display)}
+.wx .l{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.25}
+
+/* who */
+.who{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 4px;font-size:13px;color:var(--muted)}
+.who button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.who button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.who.ask{background:var(--accent-soft);border-radius:12px;padding:10px 12px;color:var(--ink)}
+
+/* sections */
+section.panel{padding-block:8px 24px}
+.panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:14px 0 10px}
+.panel-head h2{font:800 30px/1 var(--display);text-transform:uppercase;margin:0;letter-spacing:.01em}
+.panel-head .meta{font-size:13px;color:var(--muted);text-align:right}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;background:var(--olive);border-radius:6px;transition:width .4s}
+.toggle{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.toggle[aria-pressed="true"]{background:var(--olive-soft);border-color:var(--olive);color:var(--olive)}
+
+.group{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
+.group h3{display:flex;justify-content:space-between;align-items:center;margin:0;padding:10px 14px;font:700 12px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--line)}
+.group h3 span{letter-spacing:0;text-transform:none;font-weight:600}
+.row{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+.group h3 + .row{border-top:0}
+.check{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
+.check svg{width:16px;height:16px;opacity:0}
+.check[aria-checked="true"]{background:var(--olive);border-color:var(--olive)}
+.check[aria-checked="true"] svg{opacity:1}
+.row .main{flex:1;min-width:0}
+.row .name{background:none;border:0;padding:0;text-align:left;font-weight:600;line-height:1.35;width:100%}
+.row.done .name{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line);text-decoration-thickness:2px}
+.row .sub{font-size:12.5px;color:var(--muted);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+.row .note{font-size:12.5px;color:var(--sky);margin-top:3px}
+.by{font-size:11.5px;font-weight:600;color:var(--olive)}
+.price{flex:none;font-weight:600;font-size:14px;padding-top:4px}
+.people{display:flex;gap:6px;flex:none}
+.pchip{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font:700 12px/1 var(--body);display:grid;place-items:center;padding:0}
+.pchip[aria-checked="true"]{background:var(--olive);border-color:var(--olive);color:#fff}
+.pchip.me{box-shadow:0 0 0 2px var(--accent)}
+.edit{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:8px}
+.edit label{font-size:11px;color:var(--muted);display:grid;gap:2px}
+input[type=text],input[type=number],select{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;font-size:16px;min-width:0}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+.del{align-self:end;border:1.5px solid var(--line);background:none;border-radius:10px;padding:8px 10px;color:var(--warn);font-weight:600;font-size:13px}
+.del.sure{background:var(--warn);color:#fff;border-color:var(--warn)}
+
+.add{background:var(--surface);border:1.5px dashed var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:8px}
+.add .t{font:700 12px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.add .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.add .full{grid-column:1/-1}
+.btn{border:0;background:var(--ink);color:var(--surface);border-radius:12px;padding:11px 14px;font-weight:700}
+.btn.accent{background:var(--accent);color:#1C1108}
+
+/* reference cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font:800 20px/1.1 var(--display);text-transform:uppercase}
+.card p{margin:0 0 8px}
+.card ul{margin:0;padding-left:18px}
+.card li{margin:2px 0}
+.card.warm{background:var(--accent-soft);border-color:transparent}
+.tag{display:inline-block;font:700 10.5px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:6px;background:var(--olive-soft);color:var(--olive)}
+.tag.cash{background:var(--accent-soft);color:var(--accent-ink)}
+
+/* money */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.tile.big{grid-column:1/-1;background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.tile .l{font-size:12px;color:var(--muted);font-weight:600}
+.tile.big .l{color:inherit;opacity:.7}
+.tile .v{font:800 30px/1.05 var(--display);margin-top:4px}
+.tile.big .v{font-size:44px}
+.tile .s{font-size:12px;color:var(--muted);margin-top:2px}
+.tile.big .s{color:inherit;opacity:.7}
+.cost{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:10px 14px;border-top:1px solid var(--line);align-items:center}
+.group h3 + .cost{border-top:0}
+.cost .n{font-weight:600;line-height:1.3}
+.cost .x{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);grid-column:1/-1;flex-wrap:wrap}
+.cost .x input{width:88px;padding:6px 8px;font-size:16px}
+.cost .x input.q{width:56px}
+.cost .tot{font-weight:700;text-align:right}
+.paid{border:1.5px solid var(--line);background:none;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:600;margin-left:auto}
+.paid[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:#fff}
+
+/* route */
+.route{position:relative;padding-left:22px;margin:4px 0 0}
+.route::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;border-left:2px dashed var(--line)}
+.route li{list-style:none;position:relative;margin:0 0 8px}
+.route li::before{content:"";position:absolute;left:-21px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2.5px solid var(--sky)}
+.route li.end::before{background:var(--accent);border-color:var(--accent)}
+
+/* tabs */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs .in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+nav.tabs button{background:none;border:0;border-radius:12px;padding:6px 2px;display:grid;justify-items:center;gap:2px;color:var(--muted);font-size:11.5px;font-weight:600}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);background:var(--surface-2)}
+nav.tabs button[aria-selected="true"] svg{color:var(--accent)}
+nav.tabs .pc{font-size:10px;font-weight:700;color:var(--olive)}
+
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:2px}
+.seg button{border:0;background:none;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.store-head{padding:12px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.store-head .sn{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.store-head .sn b{font:800 21px/1.1 var(--display);text-transform:uppercase}
+.store-head .sn span{font-size:13px;font-weight:600;white-space:nowrap}
+.store-head .sa{font-size:12.5px;color:var(--muted);margin-top:2px}
+.store-head .sw{font-size:13px;margin-top:6px}
+.store-head a{color:var(--accent-ink);font-weight:600;font-size:12.5px}
+.stag{font-size:11px;font-weight:600;color:var(--accent-ink)}
+.edit select{padding:8px 6px}
+.status{font-size:12px;color:var(--muted);text-align:center;margin:10px 0 0}
+.status.bad{color:var(--warn)}
+.empty{padding:14px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:360px){.wx .t{font-size:18px}.edit{grid-template-columns:1fr 1fr}.edit .del{grid-column:1/-1}}
+/* budget band */
+.band{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:12px;box-shadow:var(--shadow)}
+.band .top{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.band .k{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.band .v{font:800 24px/1.1 var(--display);margin-top:2px}
+.band .v.left{color:var(--accent-ink)}
+.stack{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--line);margin:10px 0 8px}
+.stack i{display:block;height:100%;transition:width .4s}
+.stack .s1{background:var(--olive)}
+.stack .s2{background:var(--accent)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend b{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:0}
+.mine{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:13.5px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mine b{font-weight:700}
+.pos{color:var(--olive)} .neg{color:var(--warn)}
+
+/* people cards */
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px}
+.pcard.me{border-color:var(--accent)}
+.pcard .pn{font:800 20px/1 var(--display);text-transform:uppercase}
+.pcard .pl{font-size:11px;color:var(--muted);margin-top:6px}
+.pcard .pv{font-weight:700;font-size:14px}
+.pcard .bal{margin-top:6px;font-size:12px;font-weight:700}
+.settle{list-style:none;margin:0;padding:0}
+.settle li{display:flex;justify-content:space-between;gap:8px;padding:9px 14px;border-top:1px solid var(--line);font-weight:600}
+.settle li:first-child{border-top:0}
+.feed .row{align-items:center}
+.feed .amt{font-weight:700;white-space:nowrap}
+.kind{flex:none;width:30px;height:30px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font:800 13px/1 var(--display);color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:#fff}
+.fuel{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 14px}
+.fuel label{font-size:11.5px;color:var(--muted);display:grid;gap:3px}
+.fuel .out{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:var(--surface-2);border-radius:12px;padding:10px}
+.fuel .out div{font-size:11px;color:var(--muted)}
+.fuel .out b{display:block;font:800 20px/1.1 var(--display);color:var(--ink)}
+.forp{font-size:11px;font-weight:700;color:var(--sky)}
+.est{font-size:11px;color:var(--muted);font-weight:500;display:block;text-align:right}
+.cost .who-sel{width:auto;padding:4px 8px;font-size:14px;margin-left:auto}
+.store-head .left{font-size:12.5px;font-weight:700;color:var(--accent-ink);margin-top:4px}
+nav.tabs .in{grid-template-columns:repeat(5,1fr)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <svg class="scene" viewBox="0 0 400 230" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3B2A4A"/><stop offset=".45" stop-color="#B8532A"/><stop offset=".8" stop-color="#F0A24A"/><stop offset="1" stop-color="#F6C774"/>
+      </linearGradient>
+    </defs>
+    <rect width="400" height="230" fill="url(#sky)"/>
+    <circle cx="292" cy="178" r="34" fill="#FBD98A" opacity=".95"/>
+    <path d="M0 190 Q60 172 120 184 T250 178 T400 182 V230 H0Z" fill="#7A3A22" opacity=".55"/>
+    <path d="M0 202 Q80 190 170 198 T400 196 V230 H0Z" fill="#2A1A12"/>
+    <!-- acacia -->
+    <g fill="#2A1A12">
+      <path d="M92 202 L97 150 L99 150 L96 202Z"/>
+      <path d="M97 160 L78 142 L80 140 L98 156Z"/>
+      <path d="M98 156 L118 138 L120 140 L99 160Z"/>
+      <ellipse cx="96" cy="136" rx="58" ry="10"/>
+      <ellipse cx="74" cy="131" rx="30" ry="7"/>
+      <ellipse cx="122" cy="132" rx="28" ry="6"/>
+    </g>
+    <!-- giraffe -->
+    <g fill="#2A1A12">
+      <path d="M206 170 Q214 160 234 162 Q244 163 246 170 L244 176 L210 177Z"/>
+      <path d="M238 166 L252 122 L258 124 L246 170Z"/>
+      <path d="M250 118 L266 122 L265 126 L256 127 L251 125Z"/>
+      <rect x="252" y="114" width="2" height="6"/><rect x="256" y="115" width="2" height="6"/>
+      <rect x="211" y="175" width="3.2" height="27"/><rect x="218" y="175" width="3.2" height="27"/>
+      <rect x="236" y="175" width="3.2" height="27"/><rect x="242" y="174" width="3.2" height="28"/>
+      <path d="M206 170 L200 184 L202 185 L208 173Z"/>
+    </g>
+    <g fill="none" stroke="#2A1A12" stroke-width="1.6" stroke-linecap="round">
+      <path d="M318 70 q5 -5 10 0 q5 -5 10 0"/><path d="M344 88 q4 -4 8 0 q4 -4 8 0"/>
+    </g>
+  </svg>
+  <div class="over"><div class="wrap">
+    <div class="eyebrow">Balule Nature Reserve · Greater Kruger</div>
+    <h1>Bush Board</h1>
+    <div class="sub">Rob, Cassy &amp; Ashton's unit · leaving Sunday 27 September</div>
+    <div class="count" id="count"></div>
+  </div></div>
+</header>
+
+<main class="wrap">
+  <div class="wx" aria-label="Typical late-September weather at Balule">
+    <div><div class="t">29°</div><div class="l">Day high</div></div>
+    <div><div class="t">16°</div><div class="l">Night low</div></div>
+    <div><div class="t">~10°</div><div class="l">Dawn drive, with wind</div></div>
+    <div><div class="t">Dry</div><div class="l">Rain on ~3 days a month</div></div>
+  </div>
+
+  <div class="band" id="band" aria-live="polite"></div>
+  <div class="who" id="who"></div>
+  <p class="status" id="status">Connecting to the shared list…</p>
+
+  <!-- SHOP -->
+  <section class="panel" id="p-shop" hidden>
+    <div class="panel-head"><h2>Shopping</h2><div class="meta num" id="shop-meta"></div></div>
+    <div class="bar"><i id="shop-bar" style="width:0"></i></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap">
+      <div class="seg" role="group" aria-label="Group the list">
+        <button type="button" id="view-store" aria-pressed="true">By store</button>
+        <button type="button" id="view-aisle" aria-pressed="false">By food type</button>
+      </div>
+      <button class="toggle" id="shop-hide" aria-pressed="false">Hide ticked</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 10px">Ticking an item records that you paid for it, at its estimated price. Tap the name to enter what it really cost, change who paid, or who it's for.</p>
+    <div id="shop-list"></div>
+    <form class="add" id="shop-add">
+      <div class="t">Add to the shop</div>
+      <div class="grid">
+        <input class="full" type="text" id="sa-name" placeholder="Item, e.g. Peri-peri sauce" required>
+        <select id="sa-cat" aria-label="Food type"></select>
+        <input type="text" id="sa-qty" placeholder="Amount" aria-label="Amount">
+        <input type="number" id="sa-price" placeholder="Est. price R" inputmode="decimal" min="0" step="0.01" aria-label="Estimated price">
+        <select id="sa-store" aria-label="Store"></select>
+        <select id="sa-for" class="full" aria-label="Who it is for"></select>
+        <button class="btn full" type="submit">Add</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- HOME -->
+  <section class="panel" id="p-home" hidden>
+    <div class="panel-head"><h2>From home</h2><div class="meta num" id="home-meta"></div></div>
+    <div class="bar"><i id="home-bar" style="width:0"></i></div>
+    <p style="font-size:13px;color:var(--muted);margin:-4px 0 12px">Things we already have. Nothing here costs anything. Tick each one once it's in the car.</p>
+    <div id="home-list"></div>
+    <form class="add" id="home-add">
+      <div class="t">Add something from home</div>
+      <div class="grid">
+        <input class="full" type="text" id="ha-name" placeholder="Item, e.g. Braai tongs" required>
+        <button class="btn full" type="submit">Add</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- PACK -->
+  <section class="panel" id="p-pack" hidden>
+    <div class="panel-head"><h2>Packing</h2><div class="meta num" id="pack-meta"></div></div>
+    <div class="bar"><i id="pack-bar" style="width:0"></i></div>
+    <p style="font-size:13px;color:var(--muted);margin:-4px 0 12px">Round chips are for each person to tick, and yours has an orange ring. A square box is one shared item for the unit.</p>
+    <div id="pack-list"></div>
+    <form class="add" id="pack-add">
+      <div class="t">Add to packing</div>
+      <div class="grid">
+        <input class="full" type="text" id="pa-name" placeholder="Item, e.g. Travel pillow" required>
+        <select id="pa-cat" aria-label="Category"></select>
+        <select id="pa-scope" aria-label="Each or shared"><option value="each">Each person</option><option value="shared">Shared, one for the unit</option></select>
+        <button class="btn full" type="submit">Add</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- MONEY -->
+  <section class="panel" id="p-money" hidden>
+    <div class="panel-head"><h2>Money</h2><div class="meta" id="money-meta"></div></div>
+    <div class="pcards" id="pcards"></div>
+
+    <div class="group"><h3>Settle up <span id="settle-sum"></span></h3><ul class="settle" id="settle"></ul></div>
+
+    <form class="add" id="exp-add" style="margin-bottom:12px">
+      <div class="t">Log a payment</div>
+      <div class="grid">
+        <input class="full" type="text" id="ex-what" placeholder="What for, e.g. Fuel in Hoedspruit" required>
+        <input type="number" id="ex-amt" placeholder="Amount R" inputmode="decimal" min="0" step="0.01" required aria-label="Amount">
+        <select id="ex-kind" aria-label="Type">
+          <option value="fuel">Fuel</option><option value="food">Food</option><option value="drinks">Drinks</option><option value="activity">Activity</option><option value="other">Other</option>
+        </select>
+        <label class="full" style="font-size:12px;color:var(--muted)">Paid by<div class="chips" id="ex-by" style="margin-top:4px"></div></label>
+        <label class="full" style="font-size:12px;color:var(--muted)">Split between<div class="chips" id="ex-split" style="margin-top:4px"></div></label>
+        <button class="btn full" type="submit">Add payment</button>
+      </div>
+    </form>
+
+    <div class="group"><h3>Fuel · Ford Ranger 2.0 Bi-Turbo 4x2 <span id="fuel-sum"></span></h3><div class="fuel" id="fuel"></div></div>
+
+    <div id="cost-list"></div>
+
+    <div class="group feed"><h3>Every payment <span id="feed-sum"></span></h3><div id="feed"></div></div>
+  </section>
+
+  <!-- TRIP -->
+  <section class="panel" id="p-trip" hidden>
+    <div class="panel-head"><h2>The Trip</h2><div class="meta">Sunday 27 Sept</div></div>
+
+    <div class="card">
+      <h3>What to expect</h3>
+      <p>Late September is the end of the dry season: warm, clear days and cool nights. The open game vehicle is the cold part. At 5 am with the wind it feels near 10°C, so a fleece and beanie are worth it even when the afternoon hits 30°C.</p>
+      <ul>
+        <li><b>Sun:</b> UV is high by 9 am. Hat, SPF 50, lip balm.</li>
+        <li><b>Mosquitoes:</b> Balule is a low-risk malaria area. Use repellent and long sleeves from dusk. Ask a pharmacist if you want tablets.</li>
+        <li><b>Colours on drives:</b> khaki, olive, brown and grey. Skip bright white and loud colours.</li>
+        <li><b>Rain:</b> rare this month, but a thin windbreaker covers both wind and a stray shower.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Getting there</h3>
+      <span class="tag">Sunday · via Dullstroom</span>
+      <ul class="route" style="margin-top:10px">
+        <li>Fourways onto the N4 east: Diamond Hill and Middelburg tolls</li>
+        <li>Off at Belfast onto the R540, before the Machadodorp toll</li>
+        <li>Dullstroom: coffee and a pancake stop</li>
+        <li>Lydenburg, Ohrigstad, down the Abel Erasmus Pass</li>
+        <li>Hoedspruit: fuel and ice</li>
+        <li class="end">Balule gate: R200 for the bakkie, R100 a person</li>
+      </ul>
+      <span class="tag" style="margin-top:6px">Home · via Tzaneen</span>
+      <ul class="route" style="margin-top:10px">
+        <li>Balule to Tzaneen, then Polokwane and the N1 south</li>
+        <li>Four tolls: R79,50 · R61,50 · R75,00 · R60,50</li>
+        <li class="end">Fourways</li>
+      </ul>
+    </div>
+
+    <div class="card warm">
+      <h3>Des is bringing</h3>
+      <ul>
+        <li>Ribs and other braai meat</li>
+        <li>Eggs</li>
+        <li>Tzatziki and hummus</li>
+        <li>Garlic potatoes</li>
+        <li>Some salad things</li>
+        <li>Oil and some spices</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Every unit brings</h3>
+      <ul><li>Water</li><li>Snacks</li><li>Charcoal, one bag per unit</li></ul>
+      <p style="margin-top:8px;font-size:13px;color:var(--muted)">All three are already on our shopping list.</p>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" role="tablist" aria-label="Sections"><div class="in" id="tabs"></div></nav>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+/* Set this to a Firebase web config to run the board outside Claude. */
+const FIREBASE = {
+  apiKey: "AIzaSyCSLkinBMpZhhyarhmmGHzWMoyWg12GuUY",
+  authDomain: "balule-bush-board.firebaseapp.com",
+  projectId: "balule-bush-board",
+  storageBucket: "balule-bush-board.firebasestorage.app",
+  messagingSenderId: "650609381109",
+  appId: "1:650609381109:web:2497e42fa707413c667fbc"
+};
+const TRIP_KEY = 'balule-2026-09';
+
+const START = new Date('2026-09-27T06:00:00+02:00');
+const SHOP_CATS = ['Breakfast','Cheese board','Salads & sides','Braai','Lunch','Snacks','Drinks','Braai kit & kitchen'];
+const PACK_CATS = ['Clothing','Toiletries & health','Gear','Documents & cash','Car'];
+const COST_GROUPS = [['gate','Balule gate'],['drive','Game drives'],['there','Tolls there, via Dullstroom'],['back','Tolls home, via Tzaneen'],['extras','Extras']];
+const KIND_LABEL = {fuel:'Fuel', food:'Food', drinks:'Drinks', activity:'Activity', other:'Other', shop:'Shop', cost:'Trip cost'};
+const STORES = {
+  checkers: {name:'Checkers Hyper Fourways', short:'Checkers', addr:'Fourways Mall, Fourways Boulevard entrance', hours:'Open until late on Friday',
+    link:'https://www.checkers.co.za/Gauteng/Johannesburg/Four-Ways/store-details/7311',
+    why:'Carries every brand on our list: Lancewood, Fairview, Clover Mooi River and Sunbake. Fairview White Rock is on special here this month.'},
+  flm: {name:"Food Lover's Market", short:"Food Lover's", addr:'Fourways Mall, corner of Witkoppen and Cedar', hours:'Friday 08:00 to 19:00',
+    link:'https://foodloversmarket.co.za/stores/gauteng/food-lovers-market-fourways-mall/',
+    why:'Fresh food at good prices: meat, fruit and veg, roast veg packs and the biltong counter.'},
+  woolies: {name:'Woolworths Fourways Mall', short:'Woolworths', addr:'Fourways Mall', hours:'Same mall, one stop',
+    why:'Woolworths confirms none of its honey is irradiated, so the honey comes from here.'},
+  makro: {name:'Makro Riversands', short:'Makro', addr:'7 Incubation Drive, Riversands, just north of Fourways', hours:'Friday 09:00 to 18:00',
+    link:'https://www.makro.co.za/pages/store-finder',
+    why:'Cheapest of the big chains in the 2025 and 2026 grocery price surveys. Drinks, water, charcoal, packet snacks and kitchen basics. The liquor store is on site.'},
+  hoed: {name:'Hoedspruit, on the way', short:'Hoedspruit', addr:'The last town before the Balule gate', hours:'Sunday, on the road',
+    why:'Buy the ice here so it is still frozen when you arrive.'}
+};
+const STORE_ORDER = ['checkers','flm','woolies','makro','hoed'];
+const ICONS = {
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1Z"/></svg>',
+  pack:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2.5"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M4 12h16"/></svg>',
+  money:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/></svg>',
+  trip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.4-6-10.5a6 6 0 0 1 12 0C18 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.2"/></svg>'
+};
+const TICK = '<svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>';
+const TABS = {shop:'Shop', home:'Home', pack:'Pack', money:'Money', trip:'Trip'};
+
+const ls = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const state = {items:[], costs:[], expenses:[], trip:{people:['Rob','Cassy','Ashton'], fuel:{}}, itemsIn:false, costsIn:false};
+let store = null, who = ls.get('bb-who'), tab = ls.get('bb-tab') || 'shop', hideDone = ls.get('bb-hide') === '1';
+let openEdit = null, confirmDel = null, pending = false, shopView = ls.get('bb-view') === 'aisle' ? 'aisle' : 'store';
+let exBy = null, exSplit = null;
+if (TABS[location.hash.slice(1)]) tab = location.hash.slice(1);
+if (!TABS[tab]) tab = 'shop';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function rand(n){ n = Math.round((Number(n)||0)*100)/100; const neg = n<0; n=Math.abs(n);
+  const whole = Math.floor(n), cents = Math.round((n-whole)*100);
+  const w = String(whole).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  return (neg?'−':'') + 'R ' + w + (cents ? ',' + String(cents).padStart(2,'0') : ''); }
+const num = v => Number(v) || 0;
+const people = () => state.trip.people || ['Rob','Cassy','Ashton'];
+const me = () => who || people()[0];
+
+/* ---------- storage adapters ---------- */
+function nest(flat){ const o = {}; for (const k in flat){ const parts = k.split('.'); let t = o; parts.slice(0,-1).forEach(p => t = t[p] = t[p] || {}); t[parts[parts.length-1]] = flat[k]; } return o; }
+function claudeStore(db){ return {
+  onCol:(c,cb,err) => db.collection(c).onSnapshot(s => cb(s.docs.map(d => ({id:d.id, ...d.data()}))), err),
+  onDoc:(c,id,cb,err) => db.doc(c+'/'+id).onSnapshot(d => cb(d.exists ? d.data() : null), err),
+  update:(c,id,flat) => db.doc(c+'/'+id).update(nest(flat)),
+  add:(c,data) => db.collection(c).add(data),
+  del:(c,id) => db.doc(c+'/'+id).delete()
+};}
+async function firebaseStore(cfg){
+  firebase.initializeApp(cfg);
+  // Silent, no-UI sign-in: everyone who opens the link gets read/write access,
+  // with no password screen. The Firestore rules only require request.auth != null.
+  if (!firebase.auth().currentUser){
+    await new Promise((resolve, reject) => {
+      const unsub = firebase.auth().onAuthStateChanged(u => { if (u){ unsub(); resolve(); } });
+      firebase.auth().signInAnonymously().catch(reject);
+    });
+  }
+  const root = firebase.firestore().collection('trips').doc(TRIP_KEY);
+  const snapList = s => s.docs.map(d => ({id:d.id, ...d.data()}));
+  return {
+    onCol:(c,cb,err) => root.collection(c).onSnapshot(s => cb(snapList(s)), err),
+    onDoc:(c,id,cb,err) => root.collection(c).doc(id).onSnapshot(d => cb(d.exists ? d.data() : null), err),
+    update:(c,id,flat) => root.collection(c).doc(id).update(flat),
+    add:(c,data) => root.collection(c).add(data),
+    del:(c,id) => root.collection(c).doc(id).delete()
+  };
+}
+
+/* ---------- money model ---------- */
+function isDone(it){
+  const d = it.done || {};
+  if (it.scope === 'each') return people().every(p => d[p]);
+  return !!d.all;
+}
+const shopItems = () => state.items.filter(i => i.list === 'shop');
+const splitOf = forWho => (forWho && forWho !== 'all' && people().includes(forWho)) ? [forWho] : people();
+const itemCost = it => (it.actual != null && it.actual !== '') ? num(it.actual) : num(it.price);
+const costTotal = c => num(c.amount) * num(c.qty);
+function fuelPlan(){
+  const f = state.trip.fuel || {};
+  const km = num(f.kmThere) + num(f.kmBack) + num(f.kmLocal);
+  const litres = km * num(f.lPer100) / 100;
+  return {km, litres, cost: litres * num(f.pricePerL)};
+}
+/* Every rand that has actually left someone's pocket. */
+function payments(){
+  const out = [];
+  shopItems().forEach(it => { if (isDone(it) && it.paidBy) out.push({kind:'shop', what:it.name, amount:itemCost(it), paidBy:it.paidBy, split:splitOf(it.for), at:num(it.paidAt), ref:'items/'+it.id}); });
+  state.costs.forEach(c => { if (c.paidBy) out.push({kind:'cost', what:c.name, amount:costTotal(c), paidBy:c.paidBy, split:people(), at:num(c.paidAt), ref:'costs/'+c.id}); });
+  state.expenses.forEach(e => out.push({kind:e.kind||'other', what:e.what, amount:num(e.amount), paidBy:e.paidBy, split:(e.split&&e.split.length?e.split:people()).filter(p=>people().includes(p)), at:num(e.at), id:e.id}));
+  return out.filter(p => p.split.length);
+}
+/* What is still to be paid, on the estimates. */
+function stillToPay(){
+  const out = [];
+  shopItems().forEach(it => { if (!isDone(it)) out.push({amount:num(it.price), split:splitOf(it.for)}); });
+  state.costs.forEach(c => { if (!c.paidBy) out.push({amount:costTotal(c), split:people()}); });
+  const fuelPaid = state.expenses.filter(e => e.kind==='fuel').reduce((s,e)=>s+num(e.amount),0);
+  const fuelLeft = Math.max(0, fuelPlan().cost - fuelPaid);
+  if (fuelLeft) out.push({amount:fuelLeft, split:people(), fuel:true});
+  return out;
+}
+function totals(){
+  const pays = payments(), left = stillToPay();
+  const spent = pays.reduce((s,p)=>s+p.amount,0), toGo = left.reduce((s,p)=>s+p.amount,0);
+  const per = {};
+  people().forEach(p => per[p] = {paid:0, share:0, forecast:0});
+  pays.forEach(x => { if (per[x.paidBy]) per[x.paidBy].paid += x.amount; x.split.forEach(p => { per[p].share += x.amount / x.split.length; per[p].forecast += x.amount / x.split.length; }); });
+  left.forEach(x => x.split.forEach(p => { if (per[p]) per[p].forecast += x.amount / x.split.length; }));
+  return {pays, spent, toGo, forecast: spent + toGo, per};
+}
+function settleUp(per){
+  const cred = [], debt = [];
+  Object.entries(per).forEach(([p,v]) => { const b = Math.round((v.paid - v.share)*100)/100; if (b > 0.009) cred.push([p,b]); else if (b < -0.009) debt.push([p,-b]); });
+  cred.sort((a,b)=>b[1]-a[1]); debt.sort((a,b)=>b[1]-a[1]);
+  const moves = []; let i = 0, j = 0;
+  while (i < debt.length && j < cred.length){
+    const x = Math.min(debt[i][1], cred[j][1]);
+    moves.push({from:debt[i][0], to:cred[j][0], amount:x});
+    debt[i][1] -= x; cred[j][1] -= x;
+    if (debt[i][1] < 0.01) i++; if (cred[j][1] < 0.01) j++;
+  }
+  return moves;
+}
+
+/* ---------- render ---------- */
+function schedule(){ if (pending) return; pending = true; requestAnimationFrame(()=>{ pending=false; render(); }); }
+function editing(){ const a = document.activeElement; return a && a.matches && a.matches('[data-live]'); }
+document.addEventListener('focusout', e => { if (e.target.matches && e.target.matches('[data-live]')) setTimeout(schedule, 0); });
+
+function render(){
+  const T = totals();
+  renderCount(); renderWho(); renderTabs(T); renderBand(T);
+  Object.keys(TABS).forEach(t => $('p-'+t).hidden = t !== tab);
+  if (editing()) return;
+  renderShop(); renderHome(); renderPack(); renderMoney(T);
+}
+function renderCount(){
+  const days = Math.ceil((START - Date.now())/86400000);
+  $('count').innerHTML = days > 1 ? `<b class="num">${days}</b> days to go` : days === 1 ? `<b>Tomorrow</b> we leave` : days === 0 ? `<b>Today</b> we drive` : `<b>In the bush</b>`;
+}
+function renderWho(){
+  const el = $('who');
+  el.className = 'who' + (who ? '' : ' ask');
+  el.innerHTML = `<span>${who ? 'You are' : 'Who are you? Pick your name so your ticks and payments are yours.'}</span>` +
+    people().map(p => `<button type="button" data-who="${esc(p)}" aria-pressed="${p===who}">${esc(p)}</button>`).join('');
+}
+function renderTabs(T){
+  const pct = l => { const p = progress(l); return p.total ? Math.round(p.done/p.total*100)+'%' : ''; };
+  const extra = {shop:pct('shop'), home:pct('home'), pack:pct('pack'), money: state.costsIn ? rand(T.toGo).replace('R ','R') : '', trip:''};
+  $('tabs').innerHTML = Object.keys(TABS).map(t =>
+    `<button type="button" role="tab" data-tab="${t}" aria-selected="${t===tab}">${ICONS[t]}<span>${TABS[t]}</span><span class="pc num">${extra[t]||'&nbsp;'}</span></button>`).join('');
+}
+function renderBand(T){
+  if (!state.itemsIn || !state.costsIn){ $('band').hidden = true; return; }
+  $('band').hidden = false;
+  const f = T.forecast || 1;
+  const mine = who && T.per[who];
+  const bal = mine ? mine.paid - mine.share : 0;
+  $('band').innerHTML = `
+    <div class="top">
+      <div><div class="k">Trip total</div><div class="v num">${rand(T.forecast)}</div></div>
+      <div><div class="k">Spent</div><div class="v num">${rand(T.spent)}</div></div>
+      <div><div class="k">Still to spend</div><div class="v num left">${rand(T.toGo)}</div></div>
+    </div>
+    <div class="stack" role="img" aria-label="${Math.round(T.spent/f*100)} percent spent"><i class="s1" style="width:${T.spent/f*100}%"></i><i class="s2" style="width:${T.toGo/f*100}%"></i></div>
+    <div class="legend"><span><b style="background:var(--olive)"></b>Paid</span><span><b style="background:var(--accent)"></b>Still to buy, estimated</span></div>
+    ${mine ? `<div class="mine"><span>${esc(who)}: you've paid <b class="num">${rand(mine.paid)}</b>. Your trip comes to about <b class="num">${rand(mine.forecast)}</b>.</span>
+      <span class="${bal>=0?'pos':'neg'}"><b class="num">${bal>=0 ? 'You get back '+rand(bal) : 'You owe '+rand(-bal)}</b></span></div>` : ''}`;
+}
+function progress(list){
+  const items = state.items.filter(i => i.list === list);
+  if (list === 'pack'){
+    let total=0, done=0;
+    items.forEach(i => { if (i.scope==='each'){ total+=people().length; done+=people().filter(p=>(i.done||{})[p]).length; } else { total++; if((i.done||{}).all) done++; } });
+    return {done, total};
+  }
+  return {done: items.filter(isDone).length, total: items.length};
+}
+function checkBtn(on, attrs, label){ return `<button type="button" class="check" role="checkbox" aria-checked="${on}" aria-label="${esc(label)}" ${attrs}>${TICK}</button>`; }
+const whoOptions = (sel, blank) => (blank ? `<option value=""${!sel?' selected':''}>${blank}</option>` : '') + people().map(p => `<option value="${esc(p)}"${sel===p?' selected':''}>${esc(p)}</option>`).join('');
+
+function shopEdit(it){
+  if (openEdit !== it.id) return '';
+  const on = isDone(it);
+  return `<div class="edit">
+    <label>Amount<input type="text" data-live data-field="qty" data-id="${it.id}" id="e-qty-${it.id}" value="${esc(it.qty||'')}"></label>
+    <label>Est. price (R)<input type="number" inputmode="decimal" min="0" step="0.01" data-live data-field="price" data-num data-id="${it.id}" id="e-price-${it.id}" value="${num(it.price)||''}"></label>
+    <button type="button" class="del${confirmDel===it.id?' sure':''}" data-del="${it.id}">${confirmDel===it.id?'Sure? Remove':'Remove'}</button>
+    ${on ? `<label>Actually paid (R)<input type="number" inputmode="decimal" min="0" step="0.01" data-live data-field="actual" data-num data-id="${it.id}" id="e-actual-${it.id}" value="${it.actual!=null&&it.actual!==''?num(it.actual):''}" placeholder="${num(it.price)}"></label>
+    <label>Paid by<select data-field="paidBy" data-id="${it.id}" id="e-by-${it.id}">${whoOptions(it.paidBy)}</select></label><span></span>` : ''}
+    <label>Who it's for<select data-field="for" data-id="${it.id}" id="e-for-${it.id}"><option value="all"${!it.for||it.for==='all'?' selected':''}>Everyone</option>${people().map(p=>`<option value="${esc(p)}"${it.for===p?' selected':''}>Only ${esc(p)}</option>`).join('')}</select></label>
+    <label style="grid-column:span 2">Where to buy<select data-field="store" data-id="${it.id}" id="e-store-${it.id}">${STORE_ORDER.map(s=>`<option value="${s}"${it.store===s?' selected':''}>${esc(STORES[s].name)}</option>`).join('')}<option value=""${!STORES[it.store]?' selected':''}>Anywhere</option></select></label>
+  </div>`;
+}
+function shopRow(it, showStore){
+  const on = isDone(it);
+  const personal = it.for && it.for !== 'all';
+  const shown = on ? itemCost(it) : num(it.price);
+  return `<div class="row${on?' done':''}">
+    ${checkBtn(on, `data-shop="${it.id}"`, it.name)}
+    <div class="main">
+      <button type="button" class="name" data-open="${it.id}">${esc(it.name)}</button>
+      <div class="sub">${it.qty?`<span>${esc(it.qty)}</span>`:''}${personal?`<span class="forp">${esc(it.for)}'s</span>`:''}${showStore && STORES[it.store] ? `<span class="stag">${esc(STORES[it.store].short)}</span>` : ''}${!showStore ? `<span>${esc(it.cat)}</span>` : ''}${on && it.paidBy ? `<span class="by">✓ ${esc(it.paidBy)} paid</span>`:''}</div>
+      ${it.note?`<div class="note">${esc(it.note)}</div>`:''}
+      ${shopEdit(it)}
+    </div>
+    <div class="price num">${shown ? rand(shown) : ''}${!on && shown ? '<span class="est">est.</span>' : ''}</div>
+  </div>`;
+}
+function shopGroup(head, all){
+  const shown = hideDone ? all.filter(i=>!isDone(i)) : all;
+  return `<div class="group">${head}` + (shown.length ? shown.map(it => shopRow(it, shopView==='aisle')).join('') : `<div class="empty">All bought.</div>`) + `</div>`;
+}
+function renderShop(){
+  const items = shopItems();
+  const p = progress('shop');
+  const left = items.filter(i=>!isDone(i)).reduce((s,i)=>s+num(i.price),0);
+  $('shop-meta').innerHTML = `${p.done} of ${p.total} bought<br>${rand(left)} still to buy`;
+  $('shop-bar').style.width = (p.total? p.done/p.total*100 : 0) + '%';
+  $('shop-hide').setAttribute('aria-pressed', hideDone);
+  $('view-store').setAttribute('aria-pressed', shopView==='store');
+  $('view-aisle').setAttribute('aria-pressed', shopView==='aisle');
+  if (!state.itemsIn){ $('shop-list').innerHTML=''; return; }
+  const catIdx = c => { const i = SHOP_CATS.indexOf(c); return i < 0 ? 99 : i; };
+  const byOrder = (a,b) => catIdx(a.cat)-catIdx(b.cat) || num(a.order)-num(b.order);
+  const stat = all => `${all.filter(isDone).length}/${all.length}`;
+  if (shopView === 'store'){
+    $('shop-list').innerHTML = [...STORE_ORDER, ''].map(k => {
+      const all = items.filter(i => k ? i.store===k : !STORES[i.store]).sort(byOrder);
+      if (!all.length) return '';
+      const s = STORES[k];
+      const leftHere = all.filter(i=>!isDone(i)).reduce((t,i)=>t+num(i.price),0);
+      const head = s ? `<div class="store-head"><div class="sn"><b>${esc(s.name)}</b><span class="num">${stat(all)}</span></div>
+        <div class="sa">${esc(s.addr)} · ${esc(s.hours)}</div><div class="sw">${esc(s.why)}</div>
+        <div class="left num">${leftHere ? rand(leftHere)+' left to buy here' : 'Done here'}</div>
+        ${s.link?`<a href="${s.link}" target="_blank" rel="noopener">Store page and specials</a>`:''}</div>`
+        : `<h3>Anywhere <span class="num">${stat(all)}</span></h3>`;
+      return shopGroup(head, all);
+    }).join('');
+    return;
+  }
+  const cats = [...SHOP_CATS, ...new Set(items.map(i=>i.cat).filter(c=>!SHOP_CATS.includes(c)))];
+  $('shop-list').innerHTML = cats.map(cat => {
+    const all = items.filter(i=>i.cat===cat).sort(byOrder);
+    if (!all.length) return '';
+    const leftHere = all.filter(i=>!isDone(i)).reduce((t,i)=>t+num(i.price),0);
+    return shopGroup(`<h3>${esc(cat)} <span class="num">${stat(all)} · ${rand(leftHere)} left</span></h3>`, all);
+  }).join('');
+}
+
+function simpleEdit(it){
+  if (openEdit !== it.id) return '';
+  return `<div class="edit">
+    <label style="grid-column:span 2">Note<input type="text" data-live data-field="note" data-id="${it.id}" id="e-note-${it.id}" value="${esc(it.note||'')}"></label>
+    <button type="button" class="del${confirmDel===it.id?' sure':''}" data-del="${it.id}">${confirmDel===it.id?'Sure? Remove':'Remove'}</button>
+  </div>`;
+}
+function renderHome(){
+  const items = state.items.filter(i=>i.list==='home').sort((a,b)=>num(a.order)-num(b.order));
+  const p = progress('home');
+  $('home-meta').textContent = `${p.done} of ${p.total} in the car`;
+  $('home-bar').style.width = (p.total? p.done/p.total*100 : 0) + '%';
+  if (!state.itemsIn){ $('home-list').innerHTML=''; return; }
+  $('home-list').innerHTML = `<div class="group"><h3>From the house <span class="num">${p.done}/${p.total}</span></h3>` + (items.length ? items.map(it => {
+    const on = isDone(it);
+    return `<div class="row${on?' done':''}">${checkBtn(on, `data-shared="${it.id}"`, it.name)}
+      <div class="main"><button type="button" class="name" data-open="${it.id}">${esc(it.name)}</button>
+        <div class="sub">${it.qty?`<span>${esc(it.qty)}</span>`:''}${on && it.by ? `<span class="by">✓ ${esc(it.by)}</span>`:''}</div>
+        ${it.note?`<div class="note">${esc(it.note)}</div>`:''}${simpleEdit(it)}</div></div>`;
+  }).join('') : '<div class="empty">Nothing yet.</div>') + '</div>';
+}
+function renderPack(){
+  const items = state.items.filter(i=>i.list==='pack');
+  const p = progress('pack');
+  $('pack-meta').textContent = `${p.done} of ${p.total} ticks`;
+  $('pack-bar').style.width = (p.total? p.done/p.total*100 : 0) + '%';
+  if (!state.itemsIn){ $('pack-list').innerHTML=''; return; }
+  const cats = [...PACK_CATS, ...new Set(items.map(i=>i.cat).filter(c=>!PACK_CATS.includes(c)))];
+  $('pack-list').innerHTML = cats.map(cat => {
+    const all = items.filter(i=>i.cat===cat).sort((a,b)=>num(a.order)-num(b.order));
+    if (!all.length) return '';
+    return `<div class="group"><h3>${esc(cat)} <span class="num">${all.filter(isDone).length}/${all.length} done</span></h3>` + all.map(it => {
+      const d = it.done || {}, on = isDone(it);
+      const ctrl = it.scope === 'each'
+        ? `<div class="people">${people().map(pp => `<button type="button" class="pchip${pp===who?' me':''}" role="checkbox" aria-checked="${!!d[pp]}" aria-label="${esc(pp)}: ${esc(it.name)}" data-each="${it.id}" data-person="${esc(pp)}">${esc(pp.slice(0,1))}</button>`).join('')}</div>`
+        : checkBtn(on, `data-shared="${it.id}"`, it.name);
+      return `<div class="row${on?' done':''}">
+        ${it.scope==='each' ? '' : ctrl}
+        <div class="main">
+          <button type="button" class="name" data-open="${it.id}">${esc(it.name)}</button>
+          ${it.note?`<div class="note">${esc(it.note)}</div>`:''}
+          ${it.scope!=='each' && on && it.by ? `<div class="sub"><span class="by">✓ ${esc(it.by)}</span></div>`:''}
+          ${simpleEdit(it)}
+        </div>
+        ${it.scope==='each' ? ctrl : ''}
+      </div>`;}).join('') + `</div>`;
+  }).join('');
+}
+
+function renderMoney(T){
+  if (!state.costsIn){ return; }
+  $('money-meta').textContent = `${T.pays.length} payments logged`;
+  $('pcards').innerHTML = people().map(p => {
+    const v = T.per[p], b = v.paid - v.share;
+    return `<div class="pcard${p===who?' me':''}"><div class="pn">${esc(p)}</div>
+      <div class="pl">Paid</div><div class="pv num">${rand(v.paid)}</div>
+      <div class="pl">Their trip so far</div><div class="pv num">${rand(v.share)}</div>
+      <div class="pl">Trip in total, est.</div><div class="pv num">${rand(v.forecast)}</div>
+      <div class="bal num ${Math.abs(b)<0.01?'':(b>0?'pos':'neg')}">${Math.abs(b)<0.01 ? 'Square' : b>0 ? 'Gets back '+rand(b) : 'Owes '+rand(-b)}</div></div>`;
+  }).join('');
+  const moves = settleUp(T.per);
+  $('settle-sum').textContent = moves.length ? `${moves.length} payment${moves.length>1?'s':''}` : '';
+  $('settle').innerHTML = moves.length ? moves.map(m => `<li><span>${esc(m.from)} pays ${esc(m.to)}</span><span class="num">${rand(m.amount)}</span></li>`).join('')
+    : `<li style="color:var(--muted);font-weight:500">Everyone is square. This updates as payments are logged.</li>`;
+
+  if (exBy === null) exBy = me();
+  if (exSplit === null) exSplit = people().slice();
+  $('ex-by').innerHTML = people().map(p => `<button type="button" class="chip" data-exby="${esc(p)}" aria-pressed="${exBy===p}">${esc(p)}</button>`).join('');
+  $('ex-split').innerHTML = people().map(p => `<button type="button" class="chip" data-exsplit="${esc(p)}" aria-pressed="${exSplit.includes(p)}">${esc(p)}</button>`).join('');
+
+  const f = state.trip.fuel || {}, fp = fuelPlan();
+  const fuelPaid = state.expenses.filter(e=>e.kind==='fuel').reduce((s,e)=>s+num(e.amount),0);
+  $('fuel-sum').textContent = fuelPaid ? `${rand(fuelPaid)} paid` : 'estimate';
+  const fin = (k,label,step) => `<label>${label}<input type="number" inputmode="decimal" min="0" step="${step}" data-live data-fuel="${k}" id="f-${k}" value="${num(f[k])}"></label>`;
+  $('fuel').innerHTML = fin('kmThere','Km there, via Dullstroom',1) + fin('kmBack','Km home, via Tzaneen',1) + fin('kmLocal','Km in and around the reserve',1) + fin('lPer100','Litres per 100 km',0.1) + fin('pricePerL','Diesel, R per litre',0.01) +
+    `<label>Paid at the pump so far<input type="text" disabled value="${rand(fuelPaid)}"></label>
+    <div class="out"><div><b class="num">${Math.round(fp.km)}</b>km</div><div><b class="num">${Math.round(fp.litres)} L</b>diesel</div><div><b class="num">${rand(fp.cost/people().length)}</b>each</div></div>
+    <p style="grid-column:1/-1;margin:0;font-size:12.5px;color:var(--muted)">Estimate ${rand(fp.cost)}. Ford rates the 2.0 Bi-Turbo 4x2 at 7,2 L/100 km, but owners see 8,5 to 9,2 at highway speed, so 9,0 allows for three people and luggage. When you fill up, log it above as Fuel, and the estimate is replaced as it's paid.</p>`;
+
+  $('cost-list').innerHTML = COST_GROUPS.map(([g,label]) => {
+    const rows = state.costs.filter(c=>c.group===g).sort((a,b)=>num(a.order)-num(b.order));
+    if (!rows.length) return '';
+    const sub = rows.reduce((s,c)=>s+costTotal(c),0);
+    return `<div class="group"><h3>${label} <span class="num">${rand(sub)}</span></h3>` + rows.map(c => `
+      <div class="cost">
+        <div class="n">${esc(c.name)} ${c.cash?'<span class="tag cash">Cash</span>':''}</div>
+        <div class="tot num">${rand(costTotal(c))}</div>
+        <div class="x">
+          <span>R</span><input type="number" inputmode="decimal" min="0" step="0.5" data-live data-cost="${c.id}" data-field="amount" id="c-a-${c.id}" value="${num(c.amount)}" aria-label="${esc(c.name)} amount">
+          <span>×</span><input class="q" type="number" inputmode="numeric" min="0" step="1" data-live data-cost="${c.id}" data-field="qty" id="c-q-${c.id}" value="${num(c.qty)}" aria-label="${esc(c.name)} count">
+          ${c.unit?`<span>${esc(c.unit)}</span>`:''}
+          <select class="who-sel" data-costby="${c.id}" id="c-by-${c.id}" aria-label="Who paid ${esc(c.name)}">${whoOptions(c.paidBy, 'Not paid')}</select>
+        </div>
+        ${c.note?`<div class="x" style="color:var(--sky)">${esc(c.note)}</div>`:''}
+      </div>`).join('') + `</div>`;
+  }).join('');
+
+  const feed = T.pays.slice().sort((a,b)=>b.at-a.at);
+  $('feed-sum').textContent = rand(T.spent);
+  $('feed').innerHTML = feed.length ? feed.map(p => `<div class="row">
+      <span class="kind">${esc((KIND_LABEL[p.kind]||'?').slice(0,1))}</span>
+      <div class="main"><div style="font-weight:600">${esc(p.what)}</div>
+        <div class="sub"><span>${esc(p.paidBy)} paid</span><span>${p.split.length===people().length ? 'split between everyone' : 'for '+p.split.map(esc).join(' and ')}</span>${p.at?`<span>${new Date(p.at).toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short'})}</span>`:''}</div></div>
+      <span class="amt num">${rand(p.amount)}</span>
+      ${p.id ? `<button type="button" class="del${confirmDel===p.id?' sure':''}" style="padding:4px 8px" data-delexp="${p.id}" aria-label="Remove ${esc(p.what)}">${confirmDel===p.id?'Sure?':'×'}</button>` : ''}
+    </div>`).join('') : `<div class="empty">No payments yet. Tick shop items, mark trip costs as paid, or log a payment above.</div>`;
+}
+
+/* ---------- writes ---------- */
+function setStatus(msg, bad){ const s=$('status'); s.textContent = msg||''; s.className = 'status' + (bad?' bad':''); s.hidden = !msg; }
+async function write(fn){
+  if (!store){ setStatus('Not connected, so this change was not saved.', true); return; }
+  try { await fn(); setStatus(''); }
+  catch(e){
+    setStatus(e && e.code==='invalid_argument' ? 'You have view-only access, so changes are not saved.' : 'That change did not save. Check your signal and try again.', true);
+  }
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const d = b.dataset;
+  if (d.who){ who = d.who; ls.set('bb-who', who); exBy = who; render(); return; }
+  if (d.tab){ tab = d.tab; ls.set('bb-tab', tab); openEdit=null; confirmDel=null; render(); window.scrollTo({top:0}); return; }
+  if (b.id === 'view-store' || b.id === 'view-aisle'){ shopView = b.id === 'view-store' ? 'store' : 'aisle'; ls.set('bb-view', shopView); render(); return; }
+  if (b.id === 'shop-hide'){ hideDone = !hideDone; ls.set('bb-hide', hideDone?'1':'0'); render(); return; }
+  if (d.open){ openEdit = openEdit === d.open ? null : d.open; confirmDel=null; render(); return; }
+  if (d.shop){
+    const it = state.items.find(i=>i.id===d.shop); if(!it) return;
+    const on = !isDone(it);
+    write(() => store.update('items', it.id, on ? {'done.all':true, by:me(), paidBy:me(), paidAt:Date.now()} : {'done.all':false, by:'', paidBy:'', actual:null, paidAt:0}));
+    return;
+  }
+  if (d.shared){
+    const it = state.items.find(i=>i.id===d.shared); if(!it) return;
+    const on = !(it.done||{}).all;
+    write(() => store.update('items', it.id, {'done.all':on, by: on ? me() : ''}));
+    return;
+  }
+  if (d.each){
+    const it = state.items.find(i=>i.id===d.each); if(!it) return;
+    const on = !(it.done||{})[d.person];
+    write(() => store.update('items', it.id, {['done.'+d.person]:on}));
+    return;
+  }
+  if (d.del){
+    if (confirmDel !== d.del){ confirmDel = d.del; render(); return; }
+    const id = d.del; confirmDel = null; openEdit = null;
+    write(() => store.del('items', id)); return;
+  }
+  if (d.delexp){
+    if (confirmDel !== d.delexp){ confirmDel = d.delexp; render(); return; }
+    const id = d.delexp; confirmDel = null;
+    write(() => store.del('expenses', id)); return;
+  }
+  if (d.exby){ exBy = d.exby; render(); return; }
+  if (d.exsplit){
+    const p = d.exsplit;
+    exSplit = exSplit.includes(p) ? exSplit.filter(x=>x!==p) : [...exSplit, p];
+    if (!exSplit.length) exSplit = [p];
+    render(); return;
+  }
+});
+
+document.addEventListener('change', e => {
+  const t = e.target, d = t.dataset;
+  if (d.id && d.field){
+    let v = d.num !== undefined ? (t.value === '' ? null : num(t.value)) : t.value.trim();
+    if (d.field === 'price' && v === null) v = 0;
+    write(() => store.update('items', d.id, {[d.field]: v}));
+  } else if (d.cost){
+    write(() => store.update('costs', d.cost, {[d.field]: num(t.value)}));
+  } else if (d.costby){
+    write(() => store.update('costs', d.costby, {paidBy: t.value, paidAt: t.value ? Date.now() : 0}));
+  } else if (d.fuel){
+    write(() => store.update('trip', 'main', {['fuel.'+d.fuel]: num(t.value)}));
+  }
+});
+document.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.matches('[data-live]')) e.target.blur(); });
+
+function nextOrder(list, cat){ return Math.max(0, ...state.items.filter(i=>i.list===list && (!cat || i.cat===cat)).map(i=>num(i.order))) + 1; }
+$('shop-add').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('sa-name').value.trim(); if (!name) return;
+  const cat = $('sa-cat').value;
+  const doc = {list:'shop', cat, name, qty:$('sa-qty').value.trim(), price:num($('sa-price').value), store:$('sa-store').value, for:$('sa-for').value, scope:'shared', done:{all:false}, by:'', paidBy:'', note:'', order:nextOrder('shop',cat), addedBy: me()};
+  write(() => store.add('items', doc));
+  $('sa-name').value=''; $('sa-qty').value=''; $('sa-price').value=''; $('sa-name').focus();
+});
+$('home-add').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('ha-name').value.trim(); if (!name) return;
+  write(() => store.add('items', {list:'home', cat:'Home', name, qty:'', scope:'shared', done:{all:false}, by:'', note:'', order:nextOrder('home'), addedBy: me()}));
+  $('ha-name').value=''; $('ha-name').focus();
+});
+$('pack-add').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('pa-name').value.trim(); if (!name) return;
+  const cat = $('pa-cat').value, scope = $('pa-scope').value;
+  write(() => store.add('items', {list:'pack', cat, name, qty:'', scope, done: scope==='shared'?{all:false}:{}, by:'', note:'', order:nextOrder('pack',cat), addedBy: me()}));
+  $('pa-name').value=''; $('pa-name').focus();
+});
+$('exp-add').addEventListener('submit', e => {
+  e.preventDefault();
+  const what = $('ex-what').value.trim(), amount = num($('ex-amt').value);
+  if (!what || !amount) return;
+  write(() => store.add('expenses', {what, amount, kind:$('ex-kind').value, paidBy: exBy || me(), split: exSplit || people(), at: Date.now(), addedBy: me()}));
+  $('ex-what').value=''; $('ex-amt').value='';
+});
+$('sa-cat').innerHTML = SHOP_CATS.map(c=>`<option>${esc(c)}</option>`).join('');
+$('sa-store').innerHTML = STORE_ORDER.map(s=>`<option value="${s}">${esc(STORES[s].name)}</option>`).join('') + '<option value="">Anywhere</option>';
+$('sa-for').innerHTML = `<option value="all">For everyone, split three ways</option>` + people().map(p=>`<option value="${esc(p)}">Only for ${esc(p)}</option>`).join('');
+$('pa-cat').innerHTML = PACK_CATS.map(c=>`<option>${esc(c)}</option>`).join('');
+
+/* ---------- connect ---------- */
+render();
+(async () => {
+  try {
+    if (FIREBASE && window.firebase) store = await firebaseStore(FIREBASE);
+    else {
+      const db = window.claude && window.claude.use ? await window.claude.use('db') : null;
+      if (db) store = claudeStore(db);
+    }
+  } catch(e){ store = null; }
+  if (!store){ setStatus('The shared list is not available in this view.', true); return; }
+  setStatus('Loading the list…');
+  const fail = () => setStatus('Live updates stopped. Reload the page to reconnect.', true);
+  const ready = () => { if (state.itemsIn && state.costsIn) setStatus(''); };
+  store.onCol('items', rows => { state.items = rows; state.itemsIn = true; ready(); schedule(); }, fail);
+  store.onCol('costs', rows => { state.costs = rows; state.costsIn = true; ready(); schedule(); }, fail);
+  store.onCol('expenses', rows => { state.expenses = rows; schedule(); }, fail);
+  store.onDoc('trip', 'main', data => { if (data) state.trip = {...state.trip, ...data}; schedule(); }, fail);
+})();
+setInterval(renderCount, 60000);
+})();
+</script>
+</body>
+</html>
