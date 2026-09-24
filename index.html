@@ -562,7 +562,7 @@ function settleUp(per){
 }
 
 /* ---------- render ---------- */
-function schedule(){ if (pending) return; pending = true; requestAnimationFrame(()=>{ pending=false; render(); }); }
+function schedule(){ if (pending) return; pending = true; setTimeout(()=>{ pending=false; render(); }, 0); }
 function editing(){ const a = document.activeElement; return a && a.matches && a.matches('[data-live]'); }
 document.addEventListener('focusout', e => { if (e.target.matches && e.target.matches('[data-live]')) setTimeout(schedule, 0); });
 
