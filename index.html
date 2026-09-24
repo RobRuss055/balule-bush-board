@@ -914,7 +914,7 @@ render();
   setStatus('Loading the list…');
   const fail = () => setStatus('Live updates stopped. Reload the page to reconnect.', true);
   const ready = () => { if (state.itemsIn && state.costsIn) setStatus(''); };
-  store.onCol('items', rows => { console.log('ITEMS_DEBUG', rows.length, rows[0] && rows[0].id); state.items = rows; state.itemsIn = true; ready(); schedule(); }, fail);
+  store.onCol('items', rows => { state.items = rows; state.itemsIn = true; ready(); schedule(); }, fail);
   store.onCol('costs', rows => { state.costs = rows; state.costsIn = true; ready(); schedule(); }, fail);
   store.onCol('expenses', rows => { state.expenses = rows; schedule(); }, fail);
   store.onDoc('trip', 'main', data => { if (data) state.trip = {...state.trip, ...data}; schedule(); }, fail);
